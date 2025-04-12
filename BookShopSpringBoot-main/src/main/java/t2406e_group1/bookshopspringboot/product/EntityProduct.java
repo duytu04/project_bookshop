@@ -16,7 +16,6 @@ public class EntityProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
     private String name; // Tên sản phẩm
     private Double price; // Giá sản phẩm
     private Integer quantity; // Số lượng trong kho
