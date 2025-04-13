@@ -13,5 +13,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface JpaImportProduct extends JpaRepository<EntityImportProduct, Integer> {
+    long countBySupplierId(Integer supplierId);
     // Nếu cần các phương thức truy vấn tùy chỉnh, có thể khai báo tại đây
 }
+
