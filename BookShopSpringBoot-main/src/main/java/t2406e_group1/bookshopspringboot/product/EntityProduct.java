@@ -1,6 +1,8 @@
 package t2406e_group1.bookshopspringboot.product;
 
 import java.sql.Date;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,8 +18,14 @@ public class EntityProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false, length = 100)
     private String name; // Tên sản phẩm
-    private Double price; // Giá sản phẩm
+
+    @Column(nullable = false)
+    private float price; // Giá sản phẩm
+
+    @Column(nullable = false)
     private Integer quantity; // Số lượng trong kho
     //private Boolean isActive; // Trạng thái sản phẩm (còn bán hay không)
 
@@ -33,7 +41,8 @@ public class EntityProduct {
             System.out.println("\n Lỗi->Tên sản phẩm phải từ 2 kí tự trở lên");
         }
 
-        if (this.price == null || this.price <= 0) {
+
+        if (this.price <= 0) {
             ipe = true;
             System.out.println("\n Lỗi->Giá sản phẩm phải lớn hơn 0");
         }
@@ -44,8 +53,8 @@ public class EntityProduct {
         }
 
         return ipe;
-    }
 
+    }
     // private void print(String string) {
     //     // Khai báo phương thức print
     //     throw new UnsupportedOperationException("Unimplemented method 'print'");
