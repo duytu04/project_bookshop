@@ -108,15 +108,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/review/**").permitAll()
                 .requestMatchers("/api/import-products/**").permitAll()
                 .requestMatchers("/api/discounts/**").permitAll()
-
+                .requestMatchers("/api/products/**").permitAll()
                 // OPTIONS for CORS
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // ADMIN only
                 .requestMatchers("/api/user/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/product/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/product/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/product/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
 
                 // USER role access
                 .requestMatchers(HttpMethod.GET, "/api/product/**").hasAnyRole("USER", "ADMIN")
