@@ -56,7 +56,8 @@ public class ServiceProduct {
 
     @Autowired
     private ProductRepository productRepository; // Correct type: ProductRepository, not ServiceProduct
-
+    
+  
     public List<EntityProduct> getAllProducts() {
         logger.info("Fetching all products");
         return productRepository.findAll();
