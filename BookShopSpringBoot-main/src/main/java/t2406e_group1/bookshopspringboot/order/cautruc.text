@@ -1,0 +1,21 @@
+src/main/java/com/example/orderapp
+├── config
+│   └── AppConfig.java              # Cấu hình ứng dụng (nếu cần)
+├── controller
+│   └── OrderController.java        # API cho đơn hàng
+├── model
+│   ├── Order.java                  # Thực thể Order
+│   └── OrderItem.java              # Thực thể OrderItem
+├── repository
+│   ├── OrderRepository.java        # Repository cho Order
+│   └── OrderItemRepository.java    # Repository cho OrderItem
+├── service
+│   └── OrderService.java           # Service cho Order
+├── dto
+│   ├── OrderDTO.java               # DTO cho Order
+│   └── OrderItemDTO.java           # DTO cho OrderItem
+└── exception
+    └── ResourceNotFoundException.java # Xử lý ngoại lệ
+
+src/main/resources
+├── application.properties           # Cấu hình database, JPA
