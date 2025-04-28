@@ -1,78 +1,71 @@
 package t2406e_group1.bookshopspringboot.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-// Bảo mật mật khẩu bằng spring security
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-// Sử dụng constructor injection thay vì field injection:
 public class ServiceUser {
-    private final JpaUser jpaUser;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ServiceUser(JpaUser jpaUser, PasswordEncoder passwordEncoder) {
-        this.jpaUser = jpaUser;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private JpaUser jpaUser;
 
-    // PHẦN NÀY DÀNH CHO USER, CÁC PHẦN KHÁC SẼ KHÔNG CÓ
-    // public EntityUser saveEntityUser(EntityUser entityUser) {
-    // KHÔNG MÃ HÓA MẬT KHẨU
-    // entityUser.setDateJoin(new java.sql.Date(System.currentTimeMillis()));
-    // return jpaUser.save(entityUser); }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    // MÃ HÓA MẬT KHẨU TRƯỚC KHI LƯU
-    public EntityUser saveEntityUser(EntityUser entityUser) {
-        entityUser.setDateJoin(new java.sql.Date(System.currentTimeMillis()));
-        entityUser.setPassword(passwordEncoder.encode(entityUser.getPassword())); // Mã hóa mật khẩu
-        if (entityUser.getRoles() == null || entityUser.getRoles().isEmpty()) {
-            entityUser.setRoles("ROLE_USER");  // Gán vai trò mặc định trước khi lưu
-        }
-        return jpaUser.save(entityUser);
-    }
-
-    // kiểm tra mật khẩu bằng passwordEncoder.matches(), chứ không so sánh trực tiếp
-    // chuỗi
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword); // Dùng BCrypt
-        // để kiểm tra mật khẩu
-        // return rawPassword.equals(encodedPassword); // Không mã hóa, so sánh trực
-        // tiếp, DÙng tạm khi mật khẩu trong
-        // database chưa mã hóa
-    }
-    // BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    // return passwordEncoder.matches(rawPassword, encodedPassword);
-    // PHẦN NÀY DÀNH CHO USER, CÁC PHẦN KHÁC SẼ KHÔNG CÓ
-
-
-    public Optional<EntityUser> findByEmail(String email) { // Phương thức tìm kiếm theo email
+    public Optional<EntityUser> findByEmail(String email) {
         return jpaUser.findByEmail(email);
     }
 
-    public List<EntityUser> findAll() {
+    public List<EntityUser> findByRolesContaining(String role) {
+        return jpaUser.findByRolesContaining(role);
+    }
+
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    public EntityUser createUser(EntityUser user) {
+        if (jpaUser.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return jpaUser.save(user);
+    }
+
+    public List<EntityUser> getAllUsers() {
         return jpaUser.findAll();
     }
 
-    public Optional<EntityUser> findById(int id) {
+    public Optional<EntityUser> getUserById(int id) {
         return jpaUser.findById(id);
     }
 
-    public void deleteById(int id) {
-        jpaUser.deleteById(id);
+    public EntityUser updateUser(int id, EntityUser updatedUser) {
+        Optional<EntityUser> existingUser = jpaUser.findById(id);
+        if (existingUser.isPresent()) {
+            EntityUser user = existingUser.get();
+            user.setName(updatedUser.getName());
+            user.setEmail(updatedUser.getEmail());
+            user.setPhoneNumber(updatedUser.getPhoneNumber());
+            user.setAddress(updatedUser.getAddress());
+            user.setBirthDay(updatedUser.getBirthDay());
+            user.setGender(updatedUser.isGender());
+            user.setAvata(updatedUser.getAvata());
+            user.setRoles(updatedUser.getRoles());
+            return jpaUser.save(user);
+        }
+        return null;
     }
 
-    public boolean existsById(int id) {
-        return jpaUser.existsById(id);
+    public boolean deleteUser(int id) {
+        if (jpaUser.existsById(id)) {
+            jpaUser.deleteById(id);
+            return true;
+        }
+        return false;
     }
- //phương thức lấy User theo vai trò
-    public List<EntityUser> findByRoles(String roles) {
-        return jpaUser.findByRolesContaining(roles);
-    }
-
 }
